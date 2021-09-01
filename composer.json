@@ -1,0 +1,17 @@
+{
+    "name": "bda/rdashk",
+    "description": "HW",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Bda\\Rdashk\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rdashk",
+            "email": "rdashk8@gmail.com"
+        }
+    ],
+    "require": {}
+}
