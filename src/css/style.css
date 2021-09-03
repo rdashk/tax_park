@@ -1,0 +1,16 @@
+header.small {
+    font-size: 0.9em;
+}
+
+header.small button, header.small [type="button"], header.small .button, header.small [role="button"] {
+    text-transform: none;
+}
+
+.left {
+    text-align: left;
+}
+
+form label {
+    display: block;
+}
+
