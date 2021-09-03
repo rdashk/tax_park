@@ -30,10 +30,12 @@ $repair = array_fill(0, sizeof($cars), 0);
 
 /**
  * создаем массив авто
- * @param $array
+ * @param $file
  * @return array
  */
+
 function CreateCarArray($file) {
+
     $data_json = file_get_contents($file);
 
     $cars_from_json = json_decode($data_json, false)->cars;
