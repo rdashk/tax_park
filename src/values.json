@@ -1,0 +1,27 @@
+{
+  "master":
+    {
+      "trip": 13,
+      "percent_oil": 80
+    },
+  "default":
+    {
+      "trip": 10,
+      "percent_oil": 100
+    },
+  "Luda":
+  {
+    "breakdown": 1.03
+  },
+  "Homba":
+  {
+    "breakdown": 1.01
+  },
+  "Hendai":
+  {
+    "breakdown": 1.01
+  },
+  "oil": {
+    "price": 0
+  }
+}

@@ -1,3 +1,7 @@
+<?php
+require_once dirname(__DIR__)."/vendor/autoload.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +30,7 @@
     </ul>
 </div>
 <?php
+
 include("calculate.php");
 
 ?>

@@ -1,110 +1,117 @@
 <?php
 
-use Bda\Rdashk\Car\Car;
+use Bda\Rdashk\Classes\Car;
+use Bda\Rdashk\Classes\Driver;
 
 // данные из формы
 $days = 300;
-$default = 2;
-$master = 3;
+$one_trip = 7;
 
-$drivers = [
-    "master" => [
-        "count" => $master,
-        "trip" => 13,
-        "percent_oil" => 80
-    ],
-    "default" => [
-        "count" => $default,
-        "trip" => 10,
-        "percent_oil" => 100
-    ]
-];
-//print_r($drivers["master"]["count"]);
+$drivers = CreateArray('input_data.json', "drivers");
 
-$cars = CreateCarArray('input_data.json');
+$cars = CreateArray('input_data.json', "cars");
 
-$km = array_fill(0, sizeof($cars), 0);
+$km_and_other_from_json = json_decode(file_get_contents('input_data.json'), false)->cars;
+
+$km = [];
+foreach ($km_and_other_from_json as $value){
+    array_push($km, $value->km);
+}
 
 $repair = array_fill(0, sizeof($cars), 0);
 
-
-/**
- * создаем массив авто
- * @param $file
- * @return array
- */
-
-function CreateCarArray($file) {
-
-    $data_json = file_get_contents($file);
-
-    $cars_from_json = json_decode($data_json, false)->cars;
-
-    $car_array = [];
-
-    $id = 0;
-
-    foreach ($cars_from_json as $car){
-        $new_car = new Car($car->brand, $id, -1);
-        var_dump($new_car);
-        array_push($car_array, $new_car);
-        $id++;
-    }
-
-    return $car_array;
-}
+$data_for_calculate = json_decode(file_get_contents('values.json'), true);
+// echo $data_for_calculate["master"]["trip"];
 
 /** подсчет дней
  *
  */
+echo "<br /><br />";
 for ($i=0; $i < $days; $i++){
 
-    // устанавливаем кол-во водителей
-    $drivers_for_one_day = [
-        "master" => $master,
-        "default" => $default
-    ];
+    $id = 0;
+    foreach ($cars as $car_id => $car){
+        // если машина не в ремонте (можно пробегаться по массиву repair)
+        if ($car->getBreakdown() < 100) {
 
-    foreach ($cars as $car){
+            // есть свободные водители
+            if ($id < sizeof($drivers)){
+                $drivers[$id]->setCarId($car_id);
 
-        $selected_driver = "default";
-            if ($car->getBreakdown() < 100){
+                echo "Водитель " . $drivers[$id]->getId() . " берет авто " . $car->getBrand() . " № " . $car->getId() . "<br />";
+            }
 
-                // проверка на наличие "бывалых"
-                if ($drivers_for_one_day["master"] > 0){
-                    $selected_driver = "master";
-                }
+            // нет свободных водителей
+            else break;
 
-                // водителей больше нет
-                elseif ($drivers_for_one_day["default"] == 0) {
-                    break;
-                }
+            /** считаем километраж
+             * если пройдена очередная 1000 км, отправляем в ремонт
+             **/
+            $old_km = $km[$car->getId()] / 1000;
+            $new_km = ($km[$car->getId()] + ($data_for_calculate[$drivers[$id]->getType()]["trip"] * $one_trip)) /1000;
+            if ($old_km < $new_km){
 
-                echo "Водитель " . $selected_driver . " берет авто № " . $car->getId() . $car->getBrand() . "\n";
-                $km[$car->getId()] += ($drivers[$selected_driver]["trip"] * 7);
+                $km[$car->getId()] += 1000;
 
-                if ($car->getBreakdown() == -1) {
-                    $car->setBreakdown(0.5);
-                }
-                else {
-                    $car->setBreakdown($car->getBreakdown()+1);
-                }
+            }
 
-                $drivers_for_one_day[$selected_driver]--;
+            // если авто новое
+            if ($car->getBreakdown() == -1 || $km[$car->getId()] < 1000) {
+                $car->setBreakdown(0.5);
             }
 
             else {
+                $car->setBreakdown($car->getBreakdown() * $data_for_calculate[$car->getBrand()]["breakdown"]);
+            }
 
-                echo "Ремонт авто № " . $car->getId() . " завершен!\n";
-                if ($repair[$car->getId()] == 3) {
+            // берем следующего водителя
+            $id++;
+        }
+
+        else {
+            if ($repair[$car->getId()] == 3) {
+                    echo "Ремонт авто № " . $car->getId() . " завершен! ";
                     $car->setBreakdown(0);
                     $repair[$car->getId()] = 0;
-                }
-
-                else {
-                    echo "Ремонт авто № " . $car->getId() . "продолжается..\n";
-                    $repair[$car->getId()]++;
-                }
             }
+
+            else {
+                    echo "Ремонт авто № " . $car->getId() . "продолжается.. ";
+                    $repair[$car->getId()]++;
+            }
+        }
     }
 }
+
+/**
+ * создаем массив авто
+ * @param $file
+ * @param $code
+ * @return array
+ */
+function CreateArray($file, $code) {
+
+    $data_json = file_get_contents($file);
+    $data_from_json = json_decode($data_json, false)->$code;
+
+    $array = [];
+
+    foreach ($data_from_json as $id => $item){
+        switch ($code){
+            case "cars":
+                $new_item = new Car($item->brand, $id, -1);
+                break;
+            case "drivers":
+                $new_item = new Driver($item->type, $item->name, $id);
+                break;
+            default:
+                echo "Wrong data!";
+                return [];
+        }
+        //var_dump($new_car);
+        array_push($array, $new_item);
+    }
+
+    return $array;
+}
+

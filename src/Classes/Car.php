@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Bda\Rdashk\Car;
+namespace Bda\Rdashk\Classes;
 
 
 class Car

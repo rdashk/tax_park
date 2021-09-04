@@ -4,7 +4,20 @@
   },
   "drivers": [
     {
-      "type": "default"
+      "type": "master",
+      "name": "Ivan"
+    },
+    {
+      "type": "default",
+      "name": "Oleg"
+    },
+    {
+      "type": "default",
+      "name": "Olga"
+    },
+    {
+      "type": "default",
+      "name": "Simon"
     }
   ],
   "cars": [
@@ -13,12 +26,12 @@
       "brand": "Homba"
     },
     {
-      "km": 20512,
-      "brand": "Luda"
-    },
-    {
       "km": 10300,
       "brand": "Hendai"
+    },
+    {
+      "km": 20512,
+      "brand": "Luda"
     }
   ]
 }
