@@ -3,6 +3,8 @@
 use Bda\Rdashk\Classes\Car;
 use Bda\Rdashk\Classes\Driver;
 
+$input_data = "input_data2";
+
 // данные из формы
 $days = 200;
 if ($_POST['days'] != ""){
@@ -16,11 +18,11 @@ if ($_POST['file_name'] != ""){
 
 $one_trip = 7;
 
-$drivers = CreateArray('input_data.json', "drivers");
+$drivers = CreateArray($input_data . ".json", "drivers");
 
-$cars = CreateArray('input_data.json', "cars");
+$cars = CreateArray($input_data . ".json", "cars");
 
-$km_and_other_from_json = json_decode(file_get_contents('input_data.json'), false)->cars;
+$km_and_other_from_json = json_decode(file_get_contents($input_data . ".json"), false)->cars;
 
 $km = [];
 foreach ($km_and_other_from_json as $value){
@@ -98,13 +100,34 @@ for ($i=0; $i < $days; $i++){
     }
 }
 
+toFile($cars, $km, $repair_times, $file_name . ".txt");
+
+function toFile($cars, $km, $repair_times, $file_name){
+
+    // TODO: проверку на существование файла с всплывающим окном (изменить имя или заменить сам файл)
+    if (file_exists($file_name)){
+
+        echo "<script type=\"text/javascript\"> 
+
+            alert(\"Файл с таким именем существует! Удаляем старый файл!\"); 
+          
+             </script>";
+
+        unlink($file_name);
+    }
+
 // вывод пройденных км, потраченном бензине
-foreach ($cars as $car){
-    $mytext = "Автомобиль № " . $car->getId() . " проехал " . $km[$car->getId()] . " км, сломался " . $repair_times[$car->getId()] . " раз." . PHP_EOL;
-    $file=fopen($file_name . ".txt", "a");
-    fwrite ($file, $mytext);
-    fclose($file);
+    foreach ($cars as $car){
+        $mytext = "Автомобиль № " . $car->getId() . " проехал " . $km[$car->getId()] . " км, сломался " . $repair_times[$car->getId()] . " раз." . PHP_EOL;
+
+        $file=fopen($file_name, "a");
+        fwrite ($file, $mytext);
+        fclose($file);
+    }
+
 }
+
+
 /**
  * создаем массив авто
  * @param $file

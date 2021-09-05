@@ -1,0 +1,41 @@
+{
+  "park": {
+    "places": 10
+  },
+  "drivers": [
+    {
+      "type": "master",
+      "name": "Anatol"
+    },
+    {
+      "type": "default",
+      "name": "Alex"
+    },
+    {
+      "type": "default",
+      "name": "Ann"
+    }
+  ],
+  "cars": [
+    {
+      "km": 0,
+      "brand": "Homba"
+    },
+    {
+      "km": 12000,
+      "brand": "Hendai"
+    },
+    {
+      "km": 0,
+      "brand": "Luda"
+    },
+    {
+      "km": 0,
+      "brand": "Luda"
+    },
+    {
+      "km": 0,
+      "brand": "Luda"
+    }
+  ]
+}

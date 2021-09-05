@@ -1,5 +1,7 @@
 <?php
 require_once dirname(__DIR__)."/vendor/autoload.php";
+
+$input_data = "input_data2";
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +16,7 @@ require_once dirname(__DIR__)."/vendor/autoload.php";
     <ul>Отчет
         <li>Машиномест:
             <?php
-            echo json_decode(file_get_contents('input_data.json'), false)->park->places;
+            echo json_decode(file_get_contents($input_data . ".json"), false)->park->places;
             ?>
         </li>
         <li>Кол-во дней:
@@ -27,12 +29,12 @@ require_once dirname(__DIR__)."/vendor/autoload.php";
         </li>
         <li>Водителей:
             <?php
-            echo sizeof(json_decode(file_get_contents('input_data.json'), true)["drivers"]);
+            echo sizeof(json_decode(file_get_contents($input_data . ".json"), true)["drivers"]);
             ?>
         </li>
         <li>Автомобилей:
             <?php
-            echo sizeof(json_decode(file_get_contents('input_data.json'), true)["cars"]);
+            echo sizeof(json_decode(file_get_contents($input_data . ".json"), true)["cars"]);
             ?>
         </li>
     </ul>
