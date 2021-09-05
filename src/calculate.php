@@ -4,7 +4,16 @@ use Bda\Rdashk\Classes\Car;
 use Bda\Rdashk\Classes\Driver;
 
 // данные из формы
-$days = 300;
+$days = 200;
+if ($_POST['days'] != ""){
+    $days = (int)$_POST['days'];
+}
+
+$file_name = "отчет";
+if ($_POST['file_name'] != ""){
+    $file_name = $_POST['file_name'];
+}
+
 $one_trip = 7;
 
 $drivers = CreateArray('input_data.json', "drivers");
@@ -19,6 +28,7 @@ foreach ($km_and_other_from_json as $value){
 }
 
 $repair = array_fill(0, sizeof($cars), 0);
+$repair_times = array_fill(0, sizeof($cars), 0);
 
 $data_for_calculate = json_decode(file_get_contents('values.json'), true);
 // echo $data_for_calculate["master"]["trip"];
@@ -38,7 +48,7 @@ for ($i=0; $i < $days; $i++){
             if ($id < sizeof($drivers)){
                 $drivers[$id]->setCarId($car_id);
 
-                echo "Водитель " . $drivers[$id]->getId() . " берет авто " . $car->getBrand() . " № " . $car->getId() . "<br />";
+                // echo "Водитель " . $drivers[$id]->getId() . " берет авто " . $car->getBrand() . " № " . $car->getId() . "<br />";
             }
 
             // нет свободных водителей
@@ -70,19 +80,31 @@ for ($i=0; $i < $days; $i++){
 
         else {
             if ($repair[$car->getId()] == 3) {
-                    echo "Ремонт авто № " . $car->getId() . " завершен! ";
-                    $car->setBreakdown(0);
-                    $repair[$car->getId()] = 0;
+                // echo "Ремонт авто № " . $car->getId() . " завершен! ";
+                $car->setBreakdown(0);
+                $repair[$car->getId()] = 0;
             }
 
             else {
-                    echo "Ремонт авто № " . $car->getId() . "продолжается.. ";
-                    $repair[$car->getId()]++;
+                // кол-во поломок
+                if ($repair[$car->getId()] == 0){
+                    $repair_times[$car->getId()]++;
+                }
+
+                // echo "Ремонт авто № " . $car->getId() . "продолжается.. ";
+                $repair[$car->getId()]++;
             }
         }
     }
 }
 
+// вывод пройденных км, потраченном бензине
+foreach ($cars as $car){
+    $mytext = "Автомобиль № " . $car->getId() . " проехал " . $km[$car->getId()] . " км, сломался " . $repair_times[$car->getId()] . " раз." . PHP_EOL;
+    $file=fopen($file_name . ".txt", "a");
+    fwrite ($file, $mytext);
+    fclose($file);
+}
 /**
  * создаем массив авто
  * @param $file

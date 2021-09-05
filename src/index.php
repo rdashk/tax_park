@@ -15,9 +15,9 @@
                     <fieldset>
                         <legend>Введите данные</legend>
                         <label for="days">Кол-во дней</label>
-                        <input type="text" id="Days" name="days" placeholder="200"/>
-                        <label for="places">Кол-во мест</label>
-                        <input type="places" id="Places" name="places"  placeholder="20"/>
+                        <input type="text" id="Days" name="days" placeholder="200" />
+                        <label for="days">Имя файла для отчета</label>
+                        <input type="text" id="File_name" name="file_name" placeholder="отчет" />
                         <input type="submit">
                     </fieldset>
                 </form>

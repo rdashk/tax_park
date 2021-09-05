@@ -12,20 +12,28 @@ require_once dirname(__DIR__)."/vendor/autoload.php";
 <body>
 <div>
     <ul>Отчет
-        <li>Машиномест: </li>
-        <li>Кол-во дней: </li>
-        <li>Водители
-            <ul>
-                <li>Бывалые: </li>
-                <li>Обычные: </li>
-            </ul>
+        <li>Машиномест:
+            <?php
+            echo json_decode(file_get_contents('input_data.json'), false)->park->places;
+            ?>
+        </li>
+        <li>Кол-во дней:
+            <?php
+            if ($_POST['days'] == "") {
+                echo "200";
+            }
+            else echo $_POST['days'];
+            ?>
+        </li>
+        <li>Водителей:
+            <?php
+            echo sizeof(json_decode(file_get_contents('input_data.json'), true)["drivers"]);
+            ?>
         </li>
         <li>Автомобилей:
-            <ul>
-                <li>Luda: </li>
-                <li>Homba: </li>
-                <li>Hendai: </li>
-            </ul>
+            <?php
+            echo sizeof(json_decode(file_get_contents('input_data.json'), true)["cars"]);
+            ?>
         </li>
     </ul>
 </div>
@@ -33,5 +41,17 @@ require_once dirname(__DIR__)."/vendor/autoload.php";
 
 include("calculate.php");
 
+$file_name = "отчет";
+if ($_POST['file_name'] != ""){
+    $file_name = $_POST['file_name'];
+}
+
+$fd = fopen($file_name . ".txt", 'r') or die("Не удалось открыть файл с отчетом!");
+while(!feof($fd))
+{
+    $str = htmlentities(fgets($fd));
+    echo $str . "<br />";
+}
+fclose($fd)
 ?>
 </body>

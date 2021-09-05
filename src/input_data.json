@@ -8,6 +8,10 @@
       "name": "Ivan"
     },
     {
+      "type": "master",
+      "name": "Petr"
+    },
+    {
       "type": "default",
       "name": "Oleg"
     },
